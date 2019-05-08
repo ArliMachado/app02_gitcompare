@@ -27,6 +27,12 @@ const CompareList = ({ repositories }) => (
             {repository.lastCommit} <small>last commit</small>
           </li>
         </ul>
+
+        <footer>
+          <button type="button">
+            <i className="fa fa-spinner fa-pulse" />
+          </button>
+        </footer>
       </Repository>
     ))}
   </Container>

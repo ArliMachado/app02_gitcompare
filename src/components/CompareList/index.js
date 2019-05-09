@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Container, Repository } from './styles';
 
-const CompareList = ({ repositories }) => (
+const CompareList = ({ repositories, excludeRepository }) => (
   <Container>
     {repositories.map(repository => (
       <Repository key={repository.id}>
@@ -29,8 +29,11 @@ const CompareList = ({ repositories }) => (
         </ul>
 
         <footer>
-          <button type="button">
-            <i className="fa fa-spinner fa-pulse" />
+          <button type="submit">
+            <i className="fa fa-undo" alt="Atualizar repositório" onSubmit={excludeRepository} />
+          </button>
+          <button type="submit">
+            <i className="fa fa-times" />
           </button>
         </footer>
       </Repository>

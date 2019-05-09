@@ -38,6 +38,30 @@ export const Repository = styled.div`
     }
   }
 
+  footer {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    button {
+      width: 80px;
+      height: 55px;
+      padding: 0 20px;
+      margin-left: 25px;
+      background: #63f5b0;
+      color: #fff;
+      border: 0;
+      font-size: 20px;
+      font-weight: bold;
+      border-radius: 3px;
+
+      &:hover {
+        background: #52d89f;
+      }
+    }
+  }
+
   ul {
     list-style: none;
 

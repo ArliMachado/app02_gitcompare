@@ -41,6 +41,11 @@ export default class Main extends Component {
     }
   };
 
+  handleExcludeRepository = () => {
+    console.log('aqui');
+    
+  }
+
   render() {
     const {
       repositories, repositoryInput, repositoryError, loading,

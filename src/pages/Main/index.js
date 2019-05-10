@@ -7,6 +7,7 @@ import CompareList from '../../components/CompareList/index';
 
 import { Container, Form } from './styles';
 
+const REPOSITORY_NAME = 'repositories';
 export default class Main extends Component {
   state = {
     loading: false,
@@ -16,7 +17,7 @@ export default class Main extends Component {
   };
 
   componentDidMount() {
-    this.setState({ repositories: JSON.parse(localStorage.getItem('repositories')) || [] });
+    this.setState({ repositories: JSON.parse(localStorage.getItem(REPOSITORY_NAME)) || [] });
   }
 
   handleAddRepository = async (e) => {
@@ -31,7 +32,8 @@ export default class Main extends Component {
         repositories: [...this.state.repositories, repository],
         repositoryError: false,
       });
-      localStorage.setItem('repositories', JSON.stringify(this.state.repositories));
+
+      this.addRepositoryInLocalStorage();
     } catch (err) {
       console.log(err);
 
@@ -41,10 +43,38 @@ export default class Main extends Component {
     }
   };
 
-  handleExcludeRepository = () => {
-    console.log('aqui');
-    
-  }
+  handleExcludeRepository = async (id) => {
+    const { repositories } = this.state;
+
+    const updatedList = await repositories.filter(repository => repository.id !== id);
+    this.setState({ repositories: updatedList });
+    this.addRepositoryInLocalStorage();
+  };
+
+  handleUpdateRepository = async (id) => {
+    const { repositories } = this.state;
+    const repository = await repositories.find(rep => rep.id === id);
+
+    try {
+      const { data } = await api.get(`/repos/${repository.full_name}`);
+      data.lastCommit = moment(data.pushed_at).fromNow();
+
+      this.setState({
+        repositoryInput: '',
+        repositoryError: false,
+        repositories: repositories.map(rep => (rep.id === data.id ? data : rep)),
+      });
+
+      this.addRepositoryInLocalStorage();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  addRepositoryInLocalStorage = async () => {
+    const { repositories } = this.state;
+    await localStorage.setItem(REPOSITORY_NAME, JSON.stringify(repositories));
+  };
 
   render() {
     const {
@@ -63,7 +93,11 @@ export default class Main extends Component {
           />
           <button type="submit">{loading ? <i className="fa fa-spinner fa-pulse" /> : 'OK'}</button>
         </Form>
-        <CompareList repositories={repositories} />
+        <CompareList
+          repositories={repositories}
+          excludeRepository={this.handleExcludeRepository}
+          updateRepository={this.handleUpdateRepository}
+        />
       </Container>
     );
   }
